@@ -15,9 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 padding: 1rem;
                 padding: clamp(0.75rem, 2.5%, 2rem);
                 margin-bottom: 1rem;
-                width: 94%;
-                margin-left: 3%;
-                margin-right:3%;
+                width: 100%;
                 border-radius: 0.5rem;
                 font-family: Tahoma, sans-serif;
             }
