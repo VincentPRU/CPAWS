@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             #cookiesAlert {
                 --danger-color: #d65757;
                 --warning-color: #c87648;
+                color: #333333;
                 display: none;
                 padding: 1rem;
                 padding: clamp(0.75rem, 2.5%, 2rem);
