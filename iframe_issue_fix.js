@@ -112,10 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
             } else {
                 console.log('Cross-domain validation passed. Cookies and storage are accessible.');
-                alertContainer.innerHTML = `
-                    <h3>Cross-domain validation passed</h3>
-                    <p>Cookies and storage are accessible.</p>
-                `;
             }
         } catch (error) {
             console.error('Could not complete browser check:', error);
