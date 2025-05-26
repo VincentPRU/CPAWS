@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const style = document.createElement('style');
     style.textContent = `
             * { box-sizing: border-box; }
-
             #cookiesAlert {
                 --danger-color: #d65757;
                 --warning-color: #c87648;
+                display: none;
                 padding: 1rem;
                 padding: clamp(0.75rem, 2.5%, 2rem);
                 margin-bottom: 1rem;
@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             #cookiesAlert header { font-size: 1rem; }
             #cookiesAlert section { font-size: 0.85rem; }
-            #cookiesAlert ul{ margin-bottom: 0px; }
-            #cookiesAlert ul li{ margin-top: 0.25rem;}
+            #cookiesAlert ol{ margin-bottom: 0px; }
+            #cookiesAlert ol li{ margin-top: 0.25rem;}
             #cookiesAlert.cookie-danger {
                background-color: rgb(255 231 231);
                border: 0.2rem solid var(--danger-color);
@@ -84,32 +84,51 @@ document.addEventListener('DOMContentLoaded', function() {
             // 3. Detection if cross-origin
             //const isCrossOrigin = await checkCrossOriginAccess();
             //if (isCrossOrigin)   
-            
-            const texts = {
-                warning_title: 'Warning!',
-                warning_cookies_message: 'Your browser is blocking third-party cookies, which may prevent this embedded form from submitting.',
-                careful_cookies_message: 'We’ve detected an issue that may affect your form submission. If you encounter errors, try one of these solutions:',
+
+            const texts_EN = {
+                warning_cookies_message: '<strong>Warning!</strong> Your browser is blocking third-party cookies, which may prevent this embedded form from submitting.',
+                careful_cookies_message: '<strong>Warning!</strong> We’ve detected an issue that may affect your form submission. If you encounter errors, try one of these solutions:',
+                enable_access_button: '<button style="display: inline-block;" id="enableAccessBtn" type="button" class="cookie-button">Click here</button> to enable third-party cookies.',
+                what_to_do: 'Here\'s what you can do:',
+                opt_1: '<strong><a id="originPageAnchor" href="#">Visit the original page</a></strong> of this form to submit it without restrictions.',
+                opt_3: 'Open this window in a more compatible browser, such as <strong>Chrome</strong> or <strong>Edge</strong>.',
+                opt_4: 'If nothing works, you can always <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.',
+                modif_denied: "<strong>Permission to update settings was denied.</strong> Visit your browser settings to enable third-party cookies manually."
             }
+            const texts_FR = {
+                warning_cookies_message: '<strong>Attention !</strong> Votre navigateur bloque les cookies tiers, ce qui peut empêcher l\'envoi de ce formulaire intégré.',
+                careful_cookies_message: '<strong>Attention !</strong> Nous avons détecté un problème qui pourrait affecter l\'envoi de votre formulaire. Si vous rencontrez des erreurs, essayez l\'une des solutions suivantes :',
+                enable_access_button: '<button style="display: inline-block;" id="enableAccessBtn" type="button" class="cookie-button">Cliquez ici</button> pour autoriser les cookies tiers.',
+                what_to_do: 'Voici ce que vous pouvez faire :',
+                opt_1: '<strong><a id="originPageAnchor" href="#">Accéder à la page originale</a></strong> de ce formulaire pour l\'envoyer sans restrictions.',
+                opt_3: 'Ouvrir cette page dans un navigateur plus compatible, comme <strong>Chrome</strong> ou <strong>Edge</strong>.',
+                opt_4: 'Si rien ne fonctionne, vous pouvez toujours <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copier ce lien</button> et l\'ouvrir manuellement.',
+                modif_denied: "<strong>L'autorisation de modifier les paramètres a été refusée.</strong> Accédez aux paramètres de votre navigateur pour autoriser manuellement les cookies tiers."
+            }
+
+            // Assign the texts based on the language attribute of the alert container
+            const texts = alertContainer?.getAttribute('lang') === 'fr'? texts_FR : texts_EN;
 
             // 3. Communicate the results if one of the tests failed
             if (!validation_status.cookie || !validation_status.storage || !validation_status.no_error_detected) {
                 //3.1 Communicate the user if cookies are blocked
                 alertContainer.classList.add(!validation_status.cookie ? 'cookie-danger' : 'cookie-warning'); //red
+                alertContainer.style.display = 'block'; //Display it
                 //3.2 Show the user a warning message
-                const storageAccessButton = validation_status.showStorageAccessButton ? `<li id="enableAccessLi"><button style="display: inline-block;" id="enableAccessBtn" type="button" class="cookie-button">Click here</button> to enable third-party cookies.</li>` : '';
+                const storageAccessButton = validation_status.showStorageAccessButton ? `<li id="enableAccessLi">${texts.enable_access_button}</li>` : '';
 
                 alertContainer.innerHTML = `
                     <header>
-                        <p class="issue-desc"><strong>${texts.warning_title}</strong> ${!validation_status.cookie ? texts.warning_cookies_message : texts.careful_cookies_message}</p>
+                        <p class="issue-desc">${!validation_status.cookie ? texts.warning_cookies_message : texts.careful_cookies_message}</p>
                     </header>
                     <section>
-                        <p><strong>Here’s what you can do:</strong></p>
-                        <ul>
-                            <li><strong><a id="originPageAnchor" href="#">Visit the original page</a></strong> of this form to submit it without restrictions.</li>
+                        <p><strong>${texts.what_to_do}</strong></p>
+                        <ol>
+                            <li>${texts.opt_1}</li>
                             ${storageAccessButton}
-                            <li>Open this window in a more compatible browser, such as <strong>Chrome</strong> or <strong>Edge</strong>.</li>
-                            <li>If nothing works, you can always <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.</li>
-                        </ul>
+                            <li>${texts.opt_4}</li>
+                            <li>${texts.opt_3}</li>
+                        </ol>
                     </section>
                 `
 
@@ -120,9 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             await document.requestStorageAccess();
                             location.reload();
                         } catch (e) {
-                            document.getElementById("enableAccessLi").innerHTML = `
-                                <strong>Permission to update settings was denied.</strong> Visit your browser settings to enable third-party cookies manually.
-                            `;
+                            document.getElementById("enableAccessLi").innerHTML = modif_denied;
                         }
                     });
 
