@@ -1,4 +1,13 @@
-/* Code used to help  */
+/*********************
+ * 
+ * 
+ * 
+ *   Third-Party Cookie Monitor
+ *   Detects and notifies users when third-party cookie restrictions prevent form submission in embedded iframes.
+ * 
+ * 
+ * 
+ */
 document.addEventListener('DOMContentLoaded', function() {
     
     const COOKIE_TEST_KEY = 'cookie_test';
