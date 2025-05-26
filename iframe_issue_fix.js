@@ -7,26 +7,43 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Add styling to every element */
     const style = document.createElement('style');
     style.textContent = `
-        #cookiesAlert {
-        padding: max(1rem, 3vw);
-        margin-bottom: 1rem;
-        font-size: 0.85rem;
-        width: 100%;
-        }
-        #cookiesAlert h3 { 
-        font-size: 1.2rem;
-        margin-top: 0;
-        }
-        #cookiesAlert button { 
-        cursor: pointer;
-        font-size: 0.85rem;
-        }
-        #cookiesAlert.cookie-danger {
-        background-color: rgb(249, 203, 198);
-        }
-        #cookiesAlert.cookie-warning {
-        background-color: rgb(228, 202, 162);
-        }
+            * { box-sizing: border-box; }
+
+            #cookiesAlert {
+                --danger-color: #d65757;
+                --warning-color: #c87648;
+                padding: 1rem;
+                padding: clamp(0.75rem, 2.5%, 2rem);
+                margin-bottom: 1rem;
+                width: 94%;
+                margin-left: 3%;
+                margin-right:3%;
+                border-radius: 0.5rem;
+                font-family: Tahoma, sans-serif;
+            }
+            #cookiesAlert .issue-desc { margin-top: 0px;}
+            #cookiesAlert button { 
+                cursor: pointer;
+                font-size: 0.85rem;
+            }
+            #cookiesAlert header { font-size: 1rem; }
+            #cookiesAlert section { font-size: 0.85rem; }
+            #cookiesAlert ul{ margin-bottom: 0px; }
+            #cookiesAlert ul li{ margin-top: 0.25rem;}
+            #cookiesAlert.cookie-danger {
+               background-color: rgb(255 231 231);
+               border: 0.2rem solid var(--danger-color);
+            }
+            #cookiesAlert.cookie-danger a {
+               color: var(--danger-color);
+            }
+            #cookiesAlert.cookie-warning {
+               background-color: rgb(255 239 227);
+               border: 0.2rem solid var(--warning-color);
+            }
+            #cookiesAlert.cookie-warning a {
+               color: var(--warning-color);
+            }
     `;
     document.head.appendChild(style);
 
@@ -51,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 1. First - Test basic cookie access
             const canWriteCookies = await testCookieAccess();
             if (!canWriteCookies) {
+                console.error('Cookies are blocked or not accessible.');
                 validation_status.cookie = false;
                 // 2. If cookies are blocked, immediately check storage access
                 await handleStorageAccessRequest(alertContainer, validation_status);
@@ -59,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 2. Local storage verification
             const hasStorage = testStorageAccess();
             if (!hasStorage) {
+                console.warn('Local storage is not accessible.');
                 validation_status.storage = false;
             }
 
@@ -68,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const texts = {
                 warning_title: 'Warning!',
-                warning_cookies_message: 'Cookies are blocked in your browser settings, most likely preventing you from submiting this form.',
-                careful_cookies_message: 'We detected an issue that might cause some problems while submiting this form. Keep an eye open for some error message while submiting and if something occurs, please consider one of the following solutions.',
+                warning_cookies_message: 'Your browser is blocking third-party cookies, which may prevent this embedded form from submitting.',
+                careful_cookies_message: 'We’ve detected an issue that may affect your form submission. If you encounter errors, try one of these solutions:',
             }
 
             // 3. Communicate the results if one of the tests failed
@@ -77,19 +96,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 //3.1 Communicate the user if cookies are blocked
                 alertContainer.classList.add(!validation_status.cookie ? 'cookie-danger' : 'cookie-warning'); //red
                 //3.2 Show the user a warning message
-                const storageAccessButton = validation_status.showStorageAccessButton ? `<li id="enableAccessLi"><button style="display: inline-block;" id="enableAccessBtn" class="cookie-button">Clique here</button> to enable the cross domain cookies.</li>` : '';
+                const storageAccessButton = validation_status.showStorageAccessButton ? `<li id="enableAccessLi"><button style="display: inline-block;" id="enableAccessBtn" class="cookie-button">Click here</button> to enable third-party cookies.</li>` : '';
 
                 alertContainer.innerHTML = `
-                    <h3>${texts.warning_title}</h3>
-                    <p>${!validation_status.cookie ? texts.warning_cookies_message : texts.careful_cookies_message}</p>
-                    <h4>What you can do:</h4>
-                    <ul>
-                        <li><strong><a id="originPageAnchor" href="#">Visit the origin page</a></strong> of this form to submit it without restriction</li>
-                        ${storageAccessButton}
-                        <li>Open this window on a more compatible browser, such as Chrome or Edge.</li>
-                        <li>If nothing works, you can always <button onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.</li>
-                    </ul>
+                    <header>
+                        <p class="issue-desc"><strong>${texts.warning_title}</strong> ${!validation_status.cookie ? texts.warning_cookies_message : texts.careful_cookies_message}</p>
+                    </header>
+                    <section>
+                        <p><strong>Here’s what you can do:</strong></p>
+                        <ul>
+                            <li><strong><a id="originPageAnchor" href="#">Visit the original page</a></strong> of this form to submit it without restrictions.</li>
+                            ${storageAccessButton}
+                            <li>Open this window in a more compatible browser, such as <strong>Chrome</strong> or <strong>Edge</strong>.</li>
+                            <li>If nothing works, you can always <button onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.</li>
+                        </ul>
+                    </section>
                 `
+
                 // 3.3 Add the event listener to the button 
                 if (validation_status.showStorageAccessButton)
                     document.getElementById("enableAccessBtn").addEventListener('click', async () => {
@@ -98,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             location.reload();
                         } catch (e) {
                             document.getElementById("enableAccessLi").innerHTML = `
-                                <strong>The automatic change of autorization has been denied.</strong>: Please check your browser settings to allow cross-domain cookies.
+                                <strong>Permission to update settings was denied.</strong> Visit your browser settings to enable third-party cookies manually.
                             `;
                         }
                     });
