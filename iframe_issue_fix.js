@@ -88,9 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 careful_cookies_message: '<strong>Warning!</strong> We’ve detected an issue that may affect your form submission. If you encounter errors, try one of these solutions:',
                 enable_access_button: '<button style="display: inline-block;" id="enableAccessBtn" type="button" class="cookie-button">Click here</button> to enable third-party cookies.',
                 what_to_do: 'Here\'s what you can do:',
-                opt_1: '<strong><a id="originPageAnchor" href="#">Visit the original page</a></strong> of this form to submit it without restrictions.',
+                opt_1: '<strong><a id="originPageAnchor" href="#" target="_blank">Visit the original page</a></strong> to submit this form without restrictions, or <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> to open it manually.',
                 opt_3: 'Open this window in a more compatible browser, such as <strong>Chrome</strong> or <strong>Edge</strong>.',
-                opt_4: 'If nothing works, you can always <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.',
                 modif_denied: "<strong>Permission to update settings was denied.</strong> Visit your browser settings to enable third-party cookies manually."
             }
             const texts_FR = {
@@ -98,9 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 careful_cookies_message: '<strong>Attention !</strong> Nous avons détecté un problème qui pourrait affecter l\'envoi de votre formulaire. Si vous rencontrez des erreurs, essayez l\'une des solutions suivantes :',
                 enable_access_button: '<button style="display: inline-block;" id="enableAccessBtn" type="button" class="cookie-button">Cliquez ici</button> pour autoriser les cookies tiers.',
                 what_to_do: 'Voici ce que vous pouvez faire :',
-                opt_1: '<strong><a id="originPageAnchor" href="#">Accéder à la page originale</a></strong> de ce formulaire pour l\'envoyer sans restrictions.',
+                opt_1: '<strong><a id="originPageAnchor" href="#" target="_blank">Accéder à la page originale</a></strong> pour soumettre ce formulaire sans restrictions, ou <button type="button" onclick="navigator.clipboard.writeText(window.location.href)" class="text-button" aria-label="Copier le lien du formulaire">copier ce lien</button> pour l\'ouvrir manuellement.',
                 opt_3: 'Ouvrir cette page dans un navigateur plus compatible, comme <strong>Chrome</strong> ou <strong>Edge</strong>.',
-                opt_4: 'Si rien ne fonctionne, vous pouvez toujours <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copier ce lien</button> et l\'ouvrir manuellement.',
                 modif_denied: "<strong>L'autorisation de modifier les paramètres a été refusée.</strong> Accédez aux paramètres de votre navigateur pour autoriser manuellement les cookies tiers."
             }
 
@@ -122,9 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <section>
                         <p><strong>${texts.what_to_do}</strong></p>
                         <ol>
-                            <li>${texts.opt_1}</li>
                             ${storageAccessButton}
-                            <li>${texts.opt_4}</li>
+                            <li>${texts.opt_1}</li>
                             <li>${texts.opt_3}</li>
                         </ol>
                     </section>
