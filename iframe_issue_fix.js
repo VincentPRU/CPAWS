@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 //3.1 Communicate the user if cookies are blocked
                 alertContainer.classList.add(!validation_status.cookie ? 'cookie-danger' : 'cookie-warning'); //red
                 //3.2 Show the user a warning message
-                const storageAccessButton = validation_status.showStorageAccessButton ? `<li id="enableAccessLi"><button style="display: inline-block;" id="enableAccessBtn" class="cookie-button">Click here</button> to enable third-party cookies.</li>` : '';
+                const storageAccessButton = validation_status.showStorageAccessButton ? `<li id="enableAccessLi"><button style="display: inline-block;" id="enableAccessBtn" type="button" class="cookie-button">Click here</button> to enable third-party cookies.</li>` : '';
 
                 alertContainer.innerHTML = `
                     <header>
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <li><strong><a id="originPageAnchor" href="#">Visit the original page</a></strong> of this form to submit it without restrictions.</li>
                             ${storageAccessButton}
                             <li>Open this window in a more compatible browser, such as <strong>Chrome</strong> or <strong>Edge</strong>.</li>
-                            <li>If nothing works, you can always <button onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.</li>
+                            <li>If nothing works, you can always <button type="button" onclick="navigator.clipboard.writeText(window.location.href)">copy this link</button> and open it manually.</li>
                         </ul>
                     </section>
                 `
